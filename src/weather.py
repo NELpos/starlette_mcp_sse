@@ -3,7 +3,7 @@ import httpx
 from mcp.server.fastmcp import FastMCP
 
 # Initialize FastMCP server
-mcp = FastMCP("weather")
+weather_mcp = FastMCP("weather")
 
 # Constants
 NWS_API_BASE = "https://api.weather.gov"
@@ -34,7 +34,7 @@ Instructions: {props.get('instruction', 'No specific instructions provided')}
 """
 
 
-@mcp.tool()
+@weather_mcp.tool()
 async def get_alerts(state: str) -> str:
     """Get weather alerts for a US state.
 
@@ -54,7 +54,7 @@ async def get_alerts(state: str) -> str:
     return "\n---\n".join(alerts)
 
 
-@mcp.tool()
+@weather_mcp.tool()
 async def get_forecast(latitude: float, longitude: float) -> str:
     """Get weather forecast for a location.
 
@@ -93,4 +93,4 @@ Forecast: {period['detailedForecast']}
 
 if __name__ == "__main__":
     # Initialize and run the server
-    mcp.run(transport="sse")
+    weather_mcp.run(transport="sse")
