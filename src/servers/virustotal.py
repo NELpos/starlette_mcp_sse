@@ -7,7 +7,7 @@ virustotal_mcp = FastMCP("virustotal")
 
 VIRUSTOTAL_API_BASE = "https://www.virustotal.com/api/v3"
 # TODO: 실제 API 키를 환경변수 등에서 안전하게 불러오세요.
-VIRUSTOTAL_API_KEY = "514748b4fb4b6e8a7f4685db35f429766cca5e50f9d97a3e01b6aa3496b66f0d"
+VIRUSTOTAL_API_KEY = ""
 
 async def vt_request(endpoint: str) -> dict[str, Any] | None:
     headers = {
