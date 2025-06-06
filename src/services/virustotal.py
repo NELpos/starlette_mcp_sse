@@ -1,13 +1,14 @@
 from typing import Any
 import httpx
 from mcp.server.fastmcp import FastMCP
+import os
 
 # Initialize FastMCP server for VirusTotal
 virustotal_mcp = FastMCP("virustotal")
 
 VIRUSTOTAL_API_BASE = "https://www.virustotal.com/api/v3"
 # TODO: 실제 API 키를 환경변수 등에서 안전하게 불러오세요.
-VIRUSTOTAL_API_KEY = ""
+VIRUSTOTAL_API_KEY = os.environ.get("VIRUSTOTAL_API_KEY")
 
 async def vt_request(endpoint: str) -> dict[str, Any] | None:
     headers = {
