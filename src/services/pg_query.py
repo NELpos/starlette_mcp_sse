@@ -7,37 +7,19 @@ from mcp.server.fastmcp import FastMCP
 # Initialize FastMCP server for PostgreSQL queries
 pg_query_mcp = FastMCP("pg_query")
 
-# --- Configuration ---
-DB_USER = os.environ.get("DB_USER", "postgres")
-DB_PASSWORD = os.environ.get("DB_PASSWORD", "")
-DB_HOST = os.environ.get("DB_HOST", "localhost")
-DB_PORT = os.environ.get("DB_PORT", "5432")
-DB_NAME = os.environ.get("DB_NAME", "mydatabase")
+# --- Configuration (using common db_utils) ---
+# Database configuration is now handled by src.common.db_utils
+from src.common.db_utils import get_db_pool # Import the common get_db_pool
 
-DB_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-# Global connection pool
-_db_pool: Optional[asyncpg.Pool] = None
-
-async def get_db_pool() -> asyncpg.Pool:
-    """Initializes and returns the database connection pool."""
-    global _db_pool
-    if _db_pool is None:
-        try:
-            _db_pool = await asyncpg.create_pool(DB_URL, min_size=1, max_size=10)
-            print(f"Successfully connected to PostgreSQL database: {DB_NAME} on {DB_HOST}:{DB_PORT}")
-        except Exception as e:
-            print(f"Error creating PostgreSQL connection pool: {e}")
-            raise
-    return _db_pool
+# Local _db_pool and get_db_pool definition are removed as we use the common one.
 
 async def _execute_query(query: str, params: Optional[List[Any]] = None, fetch_all: bool = False, fetch_one: bool = False, execute_only: bool = False) -> Any:
     """
     Internal helper to execute SQL queries.
     Manages connection acquisition and release.
     """
-    if not DB_USER or not DB_HOST or not DB_NAME: # Simple check
-        return {"error": "Database connection details (DB_USER, DB_HOST, DB_NAME) must be configured in environment variables."}
+    # The check for DB_USER, DB_HOST, DB_NAME is removed as pool initialization
+    # is handled by the common get_db_pool, which will raise an error if config is missing.
 
     pool = await get_db_pool()
     async with pool.acquire() as connection:
